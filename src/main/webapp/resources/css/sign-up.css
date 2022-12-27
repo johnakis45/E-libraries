@@ -1,0 +1,133 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Dec 1, 2022, 12:03:16 PM
+    Author     : johna
+*/
+
+body{
+    background-color: rgba(101, 101, 212, 0.51)
+}
+
+
+span {
+    color : rgb(212, 255, 0)
+}
+
+input:focus {
+    outline: none !important;
+    border-bottom: 1px solid red;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+div{
+    text-align: center;
+}
+
+#buttons{
+    text-align: left;
+}
+
+
+#warning{
+    width : 50px;
+    color : red;
+}
+
+
+form .text{
+    font-size: 20px;
+    font-weight: 500;
+    display: none;
+    margin-bottom: -10px;
+}
+
+#weak{
+    color: #ff4757;
+}
+#medium{
+    color: orange;
+}
+#strong{
+    color: #0f4dea;
+}
+
+@media (min-width:600px){
+
+    .page{
+        margin: 2em 5em 3em 5em;
+        padding: 2em 6em 2em 6em;
+        background: rgb(2,0,36);
+        background: linear-gradient(117deg, rgb(96, 127, 222) 0%, rgba(39, 195, 65, 0.976) 96%, rgb(36, 196, 127) 98%, rgb(0, 13, 255) 98%, rgba(255, 0, 238, 0.586) 98%);
+        color: #ffff;
+        font-family: cursive;
+        border-radius: 1.25rem;
+    }
+
+    .form{
+        width: 100%;
+        margin-bottom: 1em;
+    }
+
+    #submit{
+        width: 50%;
+        padding: 0.75rem;
+        background: rgb(33, 32, 57);
+        color: inherit;
+        border-radius: 15px;
+        cursor: pointer;
+    }
+
+    #submit:hover{
+        background: rgba(168, 167, 184, 0.641);
+        color :rgba(240, 248, 255, 0.542)
+    }
+
+    #submit:disabled{
+        background: rgb(69, 67, 108);
+    }
+
+    #showsettings{
+        width: 50%;
+        padding: 0.75rem;
+        background: rgb(33, 32, 57);
+        color: inherit;
+        border-radius: 15px;
+        cursor: pointer;
+    }
+
+    #showsettings:hover{
+        background: rgba(168, 167, 184, 0.641);
+        color :rgba(240, 248, 255, 0.542)
+    }
+
+    #showsettings:disabled{
+        background: rgb(69, 67, 108);
+    }
+
+    #showbooks{
+        width: 50%;
+        padding: 0.75rem;
+        background: rgb(33, 32, 57);
+        color: inherit;
+        border-radius: 15px;
+        cursor: pointer;
+    }
+
+    #showbooks:hover{
+        background: rgba(168, 167, 184, 0.641);
+        color :rgba(240, 248, 255, 0.542)
+    }
+
+    #showbooks:disabled{
+        background: rgb(69, 67, 108);
+    }
+
+    textarea{
+        width: 100%;
+    }
+}

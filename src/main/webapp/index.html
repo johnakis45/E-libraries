@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <title>Book Page</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./resources/css/sign-up.css">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="js/ajax.js" defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    </head>
+    <body>
+        <h2>Book Page</h2>
+        <div id="buttons">
+            <input type="button" id="signup" onclick='return showRegistrationForm();return false;'  style="display:block;" value="Sign-Up" >
+            <input type="button" id="login" onclick='return showLogin();return false;' style="display:block;" value="Login" >
+            <input type="button" id="logout" onclick='return logout();return false;' style="display:none;" value="Logout" >
+            <input type="button" id="back" onclick='return showUserMainPage();return false;' style="display:none;" value="Back" >
+        </div>
+        <div id="message"></div>
+        <div id="ajaxContent"></div>
+
+    </body>
+
+</html>
