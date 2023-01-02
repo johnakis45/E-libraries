@@ -1,3 +1,8 @@
+<head>
+    <link rel="stylesheet" href="./resources/css/sign-up.css">
+    <script src="js/ajax.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
 <form id="loginForm" name="loginForm" onsubmit='loginPOST();return false;'>
     <div class="page">
         <h1>Login Page</h1>
@@ -6,6 +11,6 @@
         <label for="password">password:</label><br>
         <input type="password"  name="password" id="password_login" required><br><br>
         <input type="submit" class="button" id="submit" value="Login">
-        <p id="error"></>p>
+        <p id="error" style="color:red"></p>
     </div>
 </form>

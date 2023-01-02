@@ -194,8 +194,24 @@ function addAllColumnHeaders(myList) {
     return columnSet;
 }
 
+//function showLogin() {
+//  $("#ajaxContent").load("login.html");
+//}
+
+
 function showLogin() {
-    $("#ajaxContent").load("login.html");
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            window.location.href = xhr.responseText;
+        } else {
+            alert(xhr.responseText);
+        }
+    };
+    xhr.open('GET', 'Login?');
+    xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
+    xhr.send();
 }
 
 
@@ -236,28 +252,26 @@ function loginPOSTAlternative() {
 }
 
 function loginPOST() {
+    let data = {};
+    data["username"] = document.getElementById("username_login").value;
+    data["password"] = document.getElementById("password_login").value;
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200)
-        {
-            $("#ajaxContent").load("loginchoices.html");
-            window.open("loginchoices.html", "_self")
-            //window.location.href = "./loginchoices.html";
-            document.getElementById('signup').style.display = 'none';
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('logout').style.display = 'block';
-        } else if (xhr.status !== 200) {
-            $("#error").html("Wrong Credentials");
-            //('Request failed. Returned status of ' + xhr.status);
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            window.location.href = xhr.responseText;
+        } else {
+            document.getElementById("error").textContent = xhr.responseText;
         }
     };
-    var data = $('#loginForm').serialize();
-    xhr.open('POST', './Login');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send(data);
+
+    xhr.open('POST', 'Login?');
+    xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
+    xhr.send(JSON.stringify(data));
 }
 
-function logout() {
+
+
+function logoutAlt() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -276,26 +290,21 @@ function logout() {
     xhr.send();
 }
 
-function isLoggedIn() {
+function logout() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
-        if (window.location.href.match('.html')) {
-            //$("#ajaxContent").html(createTableFromJSON(JSON.parse(xhr.responseText)));
-            $("#message").html("Welcome again " + xhr.responseText);
-            document.getElementById('signup').style.display = 'none';
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('logout').style.display = 'block';
-            //  $("#ajaxContent").html("Successful Login");
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            window.location.href = xhr.responseText;
         } else {
-            document.getElementById('signup').style.display = 'block';
-            document.getElementById('login').style.display = 'block';
-            document.getElementById('logout').style.display = 'none';
-            alert('Please login or create an account. Returned status of ' + xhr.status);
+            alert(xhr.responseText);
         }
     };
-    xhr.open('GET', 'Login');
+    xhr.open('GET', 'Logout?');
+    xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
     xhr.send();
 }
+
 
 function settingPOST() {
     var frmData = {};

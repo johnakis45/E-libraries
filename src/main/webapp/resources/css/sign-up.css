@@ -29,7 +29,8 @@ div{
 }
 
 #buttons{
-    text-align: left;
+    margin: 0;
+    text-align: center;
 }
 
 

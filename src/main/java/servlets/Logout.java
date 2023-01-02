@@ -59,15 +59,15 @@ public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("loggedIn") != null) {
-            session.invalidate();
-            int activeUsers = (int) request.getServletContext().getAttribute("activeUsers");
-            request.getServletContext().setAttribute("activeUsers", activeUsers - 1);
-            response.setStatus(200);
-        } else {
-            response.setStatus(403);
-        }
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(200);
+        HttpSession session = request.getSession(true);
+        out.println("index.html");
+        session.removeAttribute("username");
+        session.removeAttribute("password");
+        out.flush();
     }
 
     /**
@@ -82,6 +82,7 @@ public class Logout extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
     }
 
     /**

@@ -5,19 +5,21 @@
  */
 package servlets;
 
+import com.google.gson.Gson;
 import database.tables.EditStudentsTable;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import mainClasses.JSON_Converter;
 import mainClasses.Student;
+import mainClasses.User;
 
 /**
  *
@@ -64,21 +66,17 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        EditStudentsTable eut = new EditStudentsTable();
-        if (session.getAttribute("loggedIn") != null) {
-            try {
-                response.setStatus(200);
-
-                Student p = eut.databaseStudentLogged(session.getAttribute("loggedIn").toString());
-                response.getWriter().write(p.getUsername());
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(200);
+        HttpSession session = request.getSession(true);
+        if (session.getAttribute("username") != null) {
+            out.println("loginchoices.html");
         } else {
-            System.out.print("error");
-            response.setStatus(403);
+            out.println("login.html");
         }
+        out.flush();
     }
 
     /**
@@ -88,76 +86,50 @@ public class Login extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
-    
-       @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String studentjson;
-        JSON_Converter jc = new JSON_Converter();
-        studentjson = jc.getJSONFromAjax(request.getReader()); //string
-
-        EditStudentsTable eut = new EditStudentsTable();
-        EditLibrarianTable eul = new EditLibrarianTable();
-
-        Student p = eut.jsonToStudent(studentjson); //student object
-
-        try {
-            Connection con = DB_Connection.getConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs;
-            HttpSession session = request.getSession();
-            rs = stmt.executeQuery("SELECT username FROM students WHERE  username = '" + p.getUsername() + "' AND password ='" + p.getPassword() + "'");
-            if (rs.next()) {
-                session.setAttribute("loggedIn", p.getUsername());
-                int activeUsers = 0;
-                if (request.getServletContext().getAttribute("activeUsers") != null) {
-                    activeUsers = (int) request.getServletContext().getAttribute("activeUsers");
-                }
-                request.getServletContext().setAttribute("activeUsers", activeUsers + 1);
-                response.setStatus(200);
-            } else {
-                response.setStatus(403);
-            }
-            System.out.print(studentjson);
-            //response.setStatus(200);
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(RegisterStudent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        HttpSession session = request.getSession(true);
+        JSON_Converter jc = new JSON_Converter();
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        BufferedReader reader = request.getReader();
+        String data = jc.getJSONFromAjax(reader);
+
+        Gson gson = new Gson();
+
+        User logged = gson.fromJson(data, User.class);
+        EditStudentsTable eut = new EditStudentsTable();
+
         try {
-            EditStudentsTable eut = new EditStudentsTable();
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
+            Student student = eut.databaseToStudent(logged.getUsername(), logged.getPassword());
 
-            HttpSession session = request.getSession(true);
-            if (eut.databaseToStudent(username, password) != null) {
-                session.setAttribute("loggedIn", username);
-
-                int activeUsers = 0;
-                if (request.getServletContext().getAttribute("activeUsers") != null) {
-                    activeUsers = (int) request.getServletContext().getAttribute("activeUsers");
-                }
-                request.getServletContext().setAttribute("activeUsers", activeUsers + 1);
+            if (student != null) {
+                out.println("loginchoices.html");
+                session.setAttribute("username", logged.getUsername());
+                session.setAttribute("password", logged.getPassword());
                 response.setStatus(200);
             } else {
-                response.setStatus(403);
+                response.setStatus(401);
+                out.println("Wrong Credentials");
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
+
+        out.flush();
     }
 
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";
