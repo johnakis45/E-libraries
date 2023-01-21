@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import com.google.gson.Gson;
 import database.tables.EditBooksTable;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -69,21 +70,18 @@ public class Books extends HttpServlet {
         String json = null;
         try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+
             EditBooksTable eut = new EditBooksTable();
             ArrayList<Book> bk = eut.databaseToBooks();
 
             if (bk == null) {
                 response.setStatus(403);
             } else {
-                for (int i = 0; i < bk.size(); i++) {
-                    String temp = eut.bookToJSON(bk.get(i)) + ',';
-                    json += temp;
-                }
-                if (json != null) {
-                    out.println(json);
-                    out.flush();
-                }
-                response.setStatus(200);
+                Gson gson = new Gson();
+                json = gson.toJson(bk);
+                response.setContentType("application/json");
+                // Write the JSON array to the response
+                response.getWriter().write(json);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Books.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +101,31 @@ public class Books extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        EditBooksTable table = new EditBooksTable();
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        StringBuffer sb = new StringBuffer("{\"books\":[");
+        try {
+            ArrayList<Book> array = table.databaseToBooks();
+            for (int i = 0; i < array.size(); i++) {
+                sb.append(table.bookToJSON(array.get(i)) + ",");
+
+            }
+
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append("]}");
+
+            System.out.println(sb);
+            out.println(sb);
+            response.setStatus(200);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            response.setStatus(500);
+        }
+
+        out.flush();
     }
 
     /**

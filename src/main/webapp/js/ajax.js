@@ -13,6 +13,7 @@ function UserPOST() {
     }
 }
 
+
 function StudentChecker() {
     var frmData = {};
     $(':input').each(function () {
@@ -198,15 +199,15 @@ function addAllColumnHeaders(myList) {
 //  $("#ajaxContent").load("login.html");
 //}
 
-
 function showLogin() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
-            window.location.href = xhr.responseText;
+            $("#ajaxContent").load(xhr.responseText);
+            document.getElementById('signup').style.display = 'none';
+            document.getElementById('login').style.display = 'none';
         } else {
-            alert(xhr.responseText);
+            alert("Unexpected Error");
         }
     };
     xhr.open('GET', 'Login?');
@@ -221,6 +222,7 @@ function showRegistrationForm() {
 
 function showUserMainPage() {
     $("#ajaxContent").load("loginchoices.html");
+    //window.location.href = "loginchoices.html";
     document.getElementById('back').style.display = 'none';
 }
 
@@ -258,7 +260,10 @@ function loginPOST() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            window.location.href = xhr.responseText;
+            //window.location.href = xhr.responseText;
+            $("#ajaxContent").load(xhr.responseText);
+            document.getElementById('signup').style.display = 'none';
+            document.getElementById('login').style.display = 'none';
         } else {
             document.getElementById("error").textContent = xhr.responseText;
         }
@@ -268,8 +273,6 @@ function loginPOST() {
     xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
     xhr.send(JSON.stringify(data));
 }
-
-
 
 function logoutAlt() {
     var xhr = new XMLHttpRequest();
@@ -305,7 +308,6 @@ function logout() {
     xhr.send();
 }
 
-
 function settingPOST() {
     var frmData = {};
     $(':input').each(function () {
@@ -338,14 +340,35 @@ function settingPOST() {
     xhr.send(jsonData);
 }
 
-
-
 function showSettings() {
-    $("#ajaxContent").load("options.html");
-    document.getElementById('back').style.display = 'block';
+    //$("#ajaxContent").load("options.html");
+    window.location.href = "options.html";
+    //$("#FName").val('value');
+    //document.getElementById('FName').value = 'hiiiii';
+    //document.getElementById('back').style.display = 'block';
 }
 
-function showBooks() {
+window.onload = SettingLoad();
+
+function SettingLoad() {
+    if (window.location.pathname.endsWith('options.html')) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                $("#ajaxContent").html(createTableFromJSON(JSON.parse(xhr.responseText)));
+                buildHtmlTable([JSON.parse(xhr.responseText)]);
+                alert('ok');
+            } else if (xhr.status !== 200) {
+                alert('Error. Returned status of ' + xhr.status);
+            }
+        };
+        xhr.open('GET', './Books');
+        xhr.send();
+        document.getElementById('FName').value = 'hiiiii';
+    }
+}
+
+function shoowBooks() {
     $("#ajaxContent").load("books.html");
     document.getElementById('back').style.display = 'block';
     var xhr = new XMLHttpRequest();
@@ -362,3 +385,33 @@ function showBooks() {
     xhr.send();
 }
 
+function showBooks() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // If the request is successful, parse the JSON array
+            var bookList = JSON.parse(xhr.responseText);
+
+            // Create a string to hold the HTML
+            let html = '<table id="books" style="margin-right: auto; border: 1px solid black; margin-left: auto;">';
+            html += '<tr style="font-family: goth2;font-size: medium;border: 1px solid black;"><td>ISBN</td><td>TITLE</td><td>WRITER</td><td>KIND</td><td>PUBLICATION YEAR</td><td>PAGES</td><td>URL</td><td>PHOTO</td></tr>';
+
+            // Iterate over the book list and create an HTML representation for each book
+
+            for (let i = 0; i < bookList.books.length; i++) {
+                html += "<tr><td>" + bookList.books[i].isbn +
+                        "</td><td>" + bookList.books[i].title + "</td><td>" + bookList.books[i].authors +
+                        "</td><td>" + bookList.books[i].genre + "</td><td>" + bookList.books[i].pages + "</td><td>" + bookList.books[i].publicationyear +
+                        "</td><td>" + bookList.books[i].url + "</td><td>" + "<img height=150 src='" + bookList.books[i].photo + "'/>" + "</td></tr>";
+            }
+            html += "</table>";
+
+            // Set the inner HTML of the book list container to the generated HTML
+            document.getElementById("message").innerHTML = html;
+        }
+        xhr.open('POST', 'Books?');
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send();
+    }
+}

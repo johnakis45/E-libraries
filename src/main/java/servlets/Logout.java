@@ -81,7 +81,21 @@ public class Logout extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        HttpSession session = request.getSession(true);
+        if (session.getAttribute("username") == null) {
+            response.setStatus(403);
+            out.println("index.html");
+        } else {
+            response.setStatus(200);
+            out.println("loginchoices.html");
+            //out.println(session.getAttribute("username").toString());
+        }
+        out.flush();
 
     }
 

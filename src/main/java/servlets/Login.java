@@ -107,21 +107,24 @@ public class Login extends HttpServlet {
 
         try {
             Student student = eut.databaseToStudent(logged.getUsername(), logged.getPassword());
-
-            if (student != null) {
-                out.println("loginchoices.html");
+            if (logged.getUsername().equals("admin") && logged.getPassword().equals("admin12*")) {
                 session.setAttribute("username", logged.getUsername());
                 session.setAttribute("password", logged.getPassword());
-                response.setStatus(200);
+                out.println("admin.html");
             } else {
-                response.setStatus(401);
-                out.println("Wrong Credentials");
+                if (student != null) {
+                    out.println("loginchoices.html");
+                    session.setAttribute("username", logged.getUsername());
+                    session.setAttribute("password", logged.getPassword());
+                    response.setStatus(200);
+                } else {
+                    response.setStatus(401);
+                    out.println("Wrong Credentials");
+                }
             }
-
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         out.flush();
     }
 

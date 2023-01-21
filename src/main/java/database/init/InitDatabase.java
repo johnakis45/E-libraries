@@ -51,6 +51,8 @@ public class InitDatabase {
     }
 
     public void initTables() throws SQLException, ClassNotFoundException {
+
+
         EditStudentsTable eut = new EditStudentsTable();
         eut.createStudentsTable();
 
@@ -71,6 +73,9 @@ public class InitDatabase {
 
         EditAdminMessageTable eam = new EditAdminMessageTable();
         eam.createAdminMessageTable();
+
+        //EditWorkersTable worker_table = new EditWorkersTable();
+        //worker_table.createWorkersTable();
 
     }
 
