@@ -111,6 +111,7 @@ public class Login extends HttpServlet {
                 session.setAttribute("username", logged.getUsername());
                 session.setAttribute("password", logged.getPassword());
                 out.println("admin.html");
+                response.setStatus(200);
             } else {
                 if (student != null) {
                     out.println("loginchoices.html");

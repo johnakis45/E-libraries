@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <title>Admin Page</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./resources/css/sign-up.css">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="js/ajax.js" defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <input type="button" id="back" onclick='return showUserMainPage();return false;' style="display:none;" value="Back" >
+        <div class="page">
+            <h1>Admin Choices</h1>
+            <input type="button" id="showusers" onclick='return showUsers();return false;' value="Profile Settings" >
+            <br><br>
+            <input type="button" id="showstatisticks" onclick='return showStatisticks();return false;' value="See the Books" >
+            <br><br>
+             <input type="button" id="logout" onclick='return logout();return false;' value="Logout" >
+             <br><br>
+             <input type="button" id="logout" onclick='return logout();return false;' value="Logout" >
+        </div>
+        <div id="message"></div>
+        <div id="ajaxContent"></div>
+
+    </body>
